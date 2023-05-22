@@ -6,15 +6,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.19",
     "@chakra-ui/react": "^2.6.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@hypertheme-editor/chakra-ui": "^0.1.6-rc.0",
     "firebase": "^9.22.0",
     "framer-motion": "^10.12.12",
     "next": "latest",
+    "palette-by-numbers": "^0.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.8.0"
+    "react-icons": "^4.8.0",
+    "react-parallax-tilt": "^1.7.140",
+    "react-tilt": "^1.0.2",
+    "react-tilty": "^3.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

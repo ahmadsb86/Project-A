@@ -2,6 +2,57 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@font-face {
+  font-family: 'Matter';
+  src: url('/matter.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Olive';
+  src: url('/olive.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Space Mono';
+  src: url('/space.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Oswald';
+  src: url('/oswald.ttf') format('truetype');
+}
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap'); */
+
+.robo{font-family: 'Matter', 'Roboto', 'Courier New', Courier, monospace;}
+.mono{font-family: 'Space Mono', monospace}
+
 .page {
-  @apply bg-back h-screen;
+  font-family: 'Roboto';
+  @apply bg-back h-full;
+}
+
+.top-h{
+  top: 80vh;
+}
+
+.bg-grado{
+  background: linear-gradient(to down, red, blue);
+}
+
+.centerify{
+  transform: translate(-50%, -50%);
+}
+
+.ossi{
+  font-family: 'Oswald';
+}
+
+.lighten{
+  backdrop-filter: brightness(140%);
+}
+
+.sep{
+  backdrop-filter: hue-rotate(60deg);
+}
+
+h1{
+  font-family: 'Space Mono', 'Courier New', Courier, monospace;
 }

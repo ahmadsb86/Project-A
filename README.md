@@ -1,10 +1,8 @@
-# Where have I put the name Project A so far
+# Project A
 
-This folder
-NPM package
-Gmail account
-Firebase Project
-Firebase App Nickname
-Google Sign in authentication
-Github oAuth app
+pls fix name
 
+# z indicies
+
+<10 - blob page etc
+49-53 - nav

@@ -1,6 +1,8 @@
 import '../styles/globals.css';
 import { ChakraProvider } from '@chakra-ui/react';
+import { generatePalette } from 'palette-by-numbers';
 import { extendTheme } from '@chakra-ui/react';
+// import { ThemeEditorProvider, HyperThemeEditor } from '@hypertheme-editor/chakra-ui';
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const theme = extendTheme({
@@ -10,20 +12,25 @@ const theme = extendTheme({
   },
 
   colors: {
+    back: '#1f1f1f',
+    backL: '#292929',
     chita: '#efefef',
-    primc: '#41808B',
-    prim: {
-      50: '#EEF5F7',
-      100: '#CEE4E8',
-      200: '#AFD3DA',
-      300: '#90C2CB',
-      400: '#70B1BD',
-      500: '#51A0AE',
-      600: '#41808B',
-      700: '#316068',
-      800: '#204046',
-      900: '#102023',
+    chiti: {
+      50: '#efefef',
+      100: '#efefef',
+      200: '#efefef',
+      300: '#efefef',
+      400: '#efefef',
+      500: '#efefef',
+      600: '#efefef',
+      700: '#efefef',
+      800: '#efefef',
+      900: '#efefef',
     },
+
+    primc: '#41808B',
+    prim: generatePalette('#41808B'),
+
     eee: {
       50: '#f2ffde',
       100: '#defcb2',
@@ -41,10 +48,11 @@ const theme = extendTheme({
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ChakraProvider theme={theme}>
-      <div className='page'>
-        <Component {...pageProps} />
-      </div>
+    <ChakraProvider theme={theme} cssVarsRoot=':root'>
+      <Component {...pageProps} />
+      {/* <ThemeEditorProvider>
+        <HyperThemeEditor pos='fixed' bottom={4} right={2} />
+      </ThemeEditorProvider> */}
     </ChakraProvider>
   );
 }
