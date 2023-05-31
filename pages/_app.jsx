@@ -1,10 +1,8 @@
 import '../styles/globals.css';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, ModalContextProvider } from '@chakra-ui/react';
 import { generatePalette } from 'palette-by-numbers';
 import { extendTheme } from '@chakra-ui/react';
-// import { ThemeEditorProvider, HyperThemeEditor } from '@hypertheme-editor/chakra-ui';
 
-// 2. Extend the theme to include custom colors, fonts, etc
 const theme = extendTheme({
   config: {
     initialColorMode: 'dark', // Set your desired default color mode (e.g., "light", "dark")
@@ -13,7 +11,9 @@ const theme = extendTheme({
 
   colors: {
     back: '#1f1f1f',
-    backL: '#292929',
+    backScheme: generatePalette('#303030'),
+    backL: '#303030',
+
     chita: '#efefef',
     chiti: {
       50: '#efefef',
@@ -50,9 +50,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme} cssVarsRoot=':root'>
       <Component {...pageProps} />
-      {/* <ThemeEditorProvider>
-        <HyperThemeEditor pos='fixed' bottom={4} right={2} />
-      </ThemeEditorProvider> */}
     </ChakraProvider>
   );
 }

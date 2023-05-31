@@ -14,4 +14,12 @@
 -Firebase App Nickname
 -Google Sign in authentication
 -Github oAuth app
+-landing page
+-onboarding page
+
+- terminal hello
+
+# to know for dev
+
+- for some reason, to make sure dark bg, your content wrapper under nicePage must be relative and the height it spans will be the height that has dark bg
 

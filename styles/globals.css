@@ -33,6 +33,10 @@
   top: 80vh;
 }
 
+.phase{
+  pointer-events: none;
+}
+
 .bg-grado{
   background: linear-gradient(to down, red, blue);
 }
@@ -50,9 +54,24 @@
 }
 
 .sep{
-  backdrop-filter: hue-rotate(60deg);
+  backdrop-filter: hue-rotate(30deg);
 }
 
 h1{
   font-family: 'Space Mono', 'Courier New', Courier, monospace;
+}
+
+.z-60{
+  z-index:60
+}
+
+.text-xxl{
+  font-size: 14rem;
+}
+
+.bg-dotted{
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.1) 1px, 
+    transparent 1px
+  );
 }
