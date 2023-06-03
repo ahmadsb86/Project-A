@@ -1,7 +1,9 @@
 import '../styles/globals.css';
 import { ChakraProvider, ModalContextProvider } from '@chakra-ui/react';
+import { ThemeProvider } from '@mui/material';
 import { generatePalette } from 'palette-by-numbers';
 import { extendTheme } from '@chakra-ui/react';
+import { muiTheme } from '../customStuff/muiTheme';
 
 const theme = extendTheme({
   config: {
@@ -48,9 +50,11 @@ const theme = extendTheme({
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ChakraProvider theme={theme} cssVarsRoot=':root'>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <ThemeProvider theme={muiTheme}>
+      <ChakraProvider cssVarsRoot=':root' theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </ThemeProvider>
   );
 }
 

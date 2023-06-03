@@ -22,6 +22,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import firebase from '../firebaseConfig'; //needed
+import { queryStorageFieldExists, setStorage } from '../customStuff/useDB';
 
 import { useRouter } from 'next/router';
 
@@ -60,6 +61,7 @@ export default function onboarding() {
   const [usernameInputValue, setusernameInputValue] = useState('');
   const [isusernameValid, setIsusernameValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isContinueBtnLoading, setIsContinueBtnLoading] = useState(false);
   const handleInputChange = (event) => {
     const value = event.target.value;
     setusernameInputValue(value);
@@ -70,7 +72,7 @@ export default function onboarding() {
         : 'Username can only contain alphanumeric characters, hyphens, and underscores.'
     );
   };
-  const handleContinue = () => {
+  const handleContinue = async () => {
     // Check if username meets the criteria
     if (!isusernameValid || usernameInputValue.trim().length === 0 || usernameInputValue.length > 80) {
       setIsusernameValid(false);
@@ -80,8 +82,16 @@ export default function onboarding() {
       return;
     }
 
-    // setIsusernameValid(false);
-    // setErrorMessage('This username is taken. Please choose another one');
+    setIsContinueBtnLoading(true);
+    //Check if username taken
+    const isUsernameTaken = await queryStorageFieldExists('Users', 'username', usernameInputValue);
+    if (isUsernameTaken) {
+      setIsusernameValid(false);
+      setErrorMessage('This username is taken. Please choose another one');
+      setIsContinueBtnLoading(false);
+      return;
+    }
+
     setDisplayCard('Step 2');
     return;
   };
@@ -128,6 +138,7 @@ export default function onboarding() {
   };
 
   const handleFinish = async () => {
+    //Check User signed in
     if (!user) {
       toast({
         title: 'Account Onboarding failed.',
@@ -138,14 +149,12 @@ export default function onboarding() {
       });
       return;
     }
-    await setDoc(
-      doc(db, 'Users', user.uid),
-      {
-        handle: usernameInputValue,
-        pRank: slideIndex,
-      },
-      { merge: true }
-    )
+
+    console.log('slide index is', slideIndex);
+    await setStorage('Users', user.uid, {
+      username: usernameInputValue,
+      pRank: slideIndex,
+    })
       .then(() => {
         toast({
           title: 'Account Onboarding Successful.',
@@ -201,7 +210,12 @@ export default function onboarding() {
                     {errorMessage}
                   </Text>
                 )}
-                <Button className='mt-8' onClick={handleContinue} isDisabled={!isusernameValid}>
+                <Button
+                  className='mt-8 bg-neutral-700'
+                  onClick={handleContinue}
+                  isLoading={isContinueBtnLoading}
+                  isDisabled={!isusernameValid}
+                >
                   Continue
                 </Button>
               </CardBody>
@@ -247,7 +261,7 @@ export default function onboarding() {
                   </Carousel>
                 </div>
 
-                <Button className='mt-8 mb-0' onClick={handleFinish}>
+                <Button className='mt-8 mb-0 bg-neutral-700' onClick={handleFinish}>
                   Finish
                 </Button>
               </CardBody>

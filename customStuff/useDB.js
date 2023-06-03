@@ -3,15 +3,17 @@ import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, getDoc, doc, setDoc, onSnapshot, getDocFromServer } from 'firebase/firestore';
+import { getFirestore, getDoc, where, get, query, doc, setDoc, getDocs, onSnapshot, getDocFromServer, addDoc, collection} from 'firebase/firestore';
 import { useContext } from 'react';
 
 
 const db = getFirestore(firebase);
 
-const getStorage = async (collection, name) => {
+
+
+const getStorage = async (collectionName, name) => {
   return new Promise(async (resolve, reject) => {
-    const res = await getDocFromServer(doc(db, collection, name));
+    const res = await getDocFromServer(doc(db, collectionName, name));
     try {
       if (res.exists) resolve(res.data());
       else {
@@ -23,7 +25,13 @@ const getStorage = async (collection, name) => {
   });
 };
 
-const existsStorage = async (collection, name) => {
+
+const  queryStorageFieldExists = async (collectionName, field, value)=>{
+  const querySnapshot = await getDocs(query(collection(db,collectionName), where(field, '==', value)))
+  return !querySnapshot.empty;
+}
+
+const existsStorage = async (collectionName, name) => {
   return new Promise(async (resolve, reject) => {
     const documentRef = doc(db, 'Users', name);
     try {
@@ -35,12 +43,23 @@ const existsStorage = async (collection, name) => {
   });
 };
 
-const setStorage = async (collection, name, payload, overwrite) => {
+const setStorage = async (collectionName, name, payload, overwrite=false) => {
   return new Promise(async (resolve, reject) => {
-    const docRef = await doc(db, collection, name);
+    const docRef = await doc(db, collectionName, name);
     try {
-      await setDoc(docRef, payload, { merge: !overwrite });
-      resolve();
+      const res = await setDoc(docRef, payload, { merge: !overwrite });
+      resolve(res);
+    } catch (err) {
+      reject(`Error ${err}`);
+    }
+  });
+};
+
+const addStorage = async (collectionName, payload) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await addDoc(collection(db, collectionName), payload)
+      resolve(res.id);
     } catch (err) {
       reject(`Error ${err}`);
     }
@@ -56,11 +75,14 @@ const useUser = () => {
 
   //init
   const [user, loading] = useAuthState(auth);
+  const [signedState, setSignedState] = useState(true);
   const [userData, setUserData] = useState({
     name: 'Loading ...',
+    username: 'Loading ...',
     email: 'Loading ...',
-pRank: 'Loading ...',
-    cRank: 'loading'
+    pRank: 'Loading ...',
+    cRank: 'loading',
+    completed: []
   });
 
   const updateUserData = async (payload) => {
@@ -84,9 +106,10 @@ pRank: 'Loading ...',
   const getUserData = async (forceFetch) => {
     return new Promise(async (resolve, reject) => {
       try {
-        if (localStorage.getItem('ud') != null && !forceFetch) {
-          console.log('got from loacl');
-          setUserData(JSON.parse(localStorage.getItem('ud')));
+        const fetchLocal = await localStorage.getItem('ud');
+        if (fetchLocal != null && !forceFetch) {
+          console.log('got from loacl', JSON.parse(fetchLocal));
+          setUserData(JSON.parse(fetchLocal));
         } else {
           const res = await getStorage('Users', user.uid);
           console.log('got from firestore: ', res);
@@ -95,6 +118,7 @@ pRank: 'Loading ...',
         }
         resolve();
       } catch (e) {
+        console.log('Couldnt get user Data: ', e)
         reject(e);
       }
     });
@@ -102,9 +126,10 @@ pRank: 'Loading ...',
 
   useEffect(() => {
     if (user && userData.name === 'Loading ...') getUserData();
+    if(!loading && !user) setSignedState(false)
   }, [loading]);
 
-  return { userData, updateUserData, forceFetch };
+  return { userData, updateUserData, forceFetch, signedState };
 };
 
-export { useUser, getStorage, setStorage, existsStorage };
+export { useUser, getStorage, setStorage, existsStorage, mergeObjects, addStorage, queryStorageFieldExists};

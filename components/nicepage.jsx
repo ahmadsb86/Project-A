@@ -7,15 +7,44 @@ import MobileNav from './navstuff/MobileNav.jsx';
 import Tooly from './Tooly.jsx';
 import Hotkeys from 'react-hot-keys';
 
-export default function NicePage({ children, terminalOpen, setTerminalOpen }) {
+export default function NicePage({ children, isTerminalOpen, terminalOpener }) {
   const closeTerminal = useRef();
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  isTerminalOpen = terminalOpen;
+
+  useEffect(() => {
+    const handleClick = () => {
+      setTerminalOpen(true);
+    };
+
+    if (terminalOpener) {
+      const button = terminalOpener.current;
+
+      if (button) {
+        button.addEventListener('click', handleClick);
+      }
+
+      return () => {
+        if (button) {
+          button.removeEventListener('click', handleClick);
+        }
+      };
+    }
+  }, []);
 
   return (
     <div className='page overflow-x-hidden'>
       <Blob />
       <Hotkeys keyName='ctrl+space' onKeyDown={() => setTerminalOpen(!terminalOpen)}>
         <div className='z-50 relative h-full'>
-          <Nav className='hidden lg:block'></Nav>
+          <Nav
+            className='hidden lg:block'
+            openTerminalCallback={() => {
+              setTerminalOpen(true);
+              console.log('clickki');
+            }}
+            selelcted={'learn'}
+          ></Nav>
           <MobileNav className='lg:hidden'></MobileNav>
           {children}
         </div>

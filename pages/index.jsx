@@ -43,7 +43,7 @@ export default function Landing() {
 
         {/* <ScrollProgress></ScrollProgress> */}
 
-        <div className='absolute top-h -left-14 w-1/6 aspect-square hidden md:block'>
+        <div className='absolute top-h -left-14 w-1/6 aspect-square hidden md:block '>
           <CircleBtn
             callback={() => {
               window.scrollTo({ top: 800, behavior: 'smooth' });

@@ -5,7 +5,11 @@ import Tilty from 'react-tilty';
 import Tooly from '../components/Tooly';
 import useSpecialEffect from '../components/useSpecialEffect';
 
+import { useUser } from '../customStuff/useDB';
+
 function Proompt(props) {
+  const { userData, forceFetch } = useUser();
+
   const asd = ['cd', 'rank', 'help', 'create', 'cra', 'crooo', 'alacra', 'alocrooo'];
   let [suggestions, setSuggestions] = useState(null);
   const maxSuggestions = 10;
@@ -25,6 +29,29 @@ function Proompt(props) {
     passB.forEach((item) => res.add(item));
 
     return res;
+  };
+
+  const exec = (input) => {
+    const cmd = input.split(' ');
+    console.log(cmd);
+    switch (cmd[0]) {
+      case 'rank':
+        props.cliRef.current.innerHTML += `<p>${userData.pRank}</p>`;
+        break;
+
+      case 'forceFetch':
+        forceFetch()
+          .then(() => {
+            props.cliRef.current.innerHTML += `<p>Forced Fetch Successful</p>`;
+          })
+          .catch(() => {
+            props.cliRef.current.innerHTML += `<p>Forced Fetch Unsuccessful</p>`;
+          });
+        break;
+
+      default:
+        break;
+    }
   };
 
   const completeSuggestion = (suggestion) => {
@@ -56,7 +83,7 @@ function Proompt(props) {
         event.preventDefault();
         setSelectedSuggestionIndex((prevIndex) => Math.min(prevIndex + 1, suggestions.length - 1));
       } else if (event.key === 'Enter' || event.key === 'Tab') {
-        if (suggestions && selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
+        if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
           event.preventDefault();
           if (selectedSuggestion == '') completeSuggestion(suggestions[selectedSuggestionIndex]);
           else completeSuggestion(selectedSuggestion);
@@ -80,6 +107,9 @@ function Proompt(props) {
         event.target.selectionStart == event.target.value.length
       )
         setSuggestions(Array.from(generateSuggestions(lastWord, asd)));
+      else {
+        exec(value);
+      }
     }
   };
 

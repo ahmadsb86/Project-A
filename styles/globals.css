@@ -1,3 +1,5 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@200;400&family=Josefin+Sans:ital,wght@1,300&family=Montserrat&family=Poppins&family=Roboto+Slab:wght@300&display=swap');
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -18,19 +20,40 @@
   font-family: 'Oswald';
   src: url('/oswald.ttf') format('truetype');
 }
-/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap'); */
+@font-face {
+  font-family: 'poppi';
+  src: url('/poppins.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Josefin';
+  src: url('/jose.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Comfort';
+  src: url('/comfort.ttf') format('truetype');
+}
 
+
+
+.slab{    font-family: 'Roboto Slab', serif;}
+.geo{    font-family: 'Geologica', monospace;}
+.mont{    font-family: 'Montserrat', monospace;}
 .robo{font-family: 'Matter', 'Roboto', 'Courier New', Courier, monospace;}
 .mono{font-family: 'Space Mono', monospace}
+.poppins{font-family: 'Poppins';}
 
 .page {
   font-family: 'Roboto';
   @apply bg-back h-full;
 }
 
+
 .top-h{
   top: 80vh;
+}
+
+.z-100{
+  z-index: 100;
 }
 
 .phase{
@@ -74,4 +97,8 @@ h1{
     rgba(255, 255, 255, 0.1) 1px, 
     transparent 1px
   );
+}
+
+.big-shadow{
+  box-shadow: 0px 0px 20px 20px #1f1f1f;
 }

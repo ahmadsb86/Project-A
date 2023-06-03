@@ -1,5 +1,5 @@
 import NicePage from '../components/nicepage';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Flex,
   Center,
@@ -25,13 +25,28 @@ import { useUser } from '../customStuff/useDB.js';
 import { rankMap } from '../customStuff/nameMapping';
 
 export default function DashBoard() {
-  const [terminalOpen, setTerminalOpen] = useState(false);
+  const terminalOpener = useRef();
   const toast = useToast();
   const { userData, updateUserData, forceFetch } = useUser();
   const rankCard = useRef();
+  const [terminalOpen] = useState(false);
+  const [hovering, setHovering] = useState(false);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', (event) => {
+      if (rankCard && rankCard.current) {
+        const { top, right, bottom, left } = rankCard.current.getBoundingClientRect();
+        if (event.clientX >= left && event.clientX <= right && event.clientY >= top && event.clientY <= bottom) {
+          setHovering(true);
+        } else {
+          setHovering(false);
+        }
+      }
+    });
+  }, []);
 
   return (
-    <NicePage tooly terminalOpen={terminalOpen} setTerminalOpen={setTerminalOpen}>
+    <NicePage terminalOpener={terminalOpener} isTerminalOpen={terminalOpen}>
       {/* using transparent border on a wrapping div to load an element in the margin above first center element so that it
       doesnt have blue bg */}
       <div className='h-full w-screen border border-transparent'>
@@ -41,17 +56,22 @@ export default function DashBoard() {
             <HStack
               ref={rankCard}
               gap={{ md: 12, sm: 100 }}
-              className='hover:opacity-10 cursor-pointer mx-4 flex justify-center items-center border border-primc px-24 py-4 rounded-full transition-all md:hover:px-48'
+              className='hover:bg-primc cursor-pointer mx-4 flex justify-center items-center border border-primc px-24 py-4 rounded-full transition-all md:hover:px-48'
             >
+              <h1
+                className={`slab absolute text-5xl transition-all opacity-0 ${hovering ? 'opacity-100' : 'opacity-0'}`}
+              >
+                Click To View Rank System
+              </h1>
               <Image
                 alt='rank-icon'
                 src={`/rank-icons/${userData.cRank}.png`}
                 width={1000}
                 height={1000}
-                className='w-24 md:w-48'
+                className={`w-24 md:w-48 transition-all ${hovering ? 'opacity-0' : ''}`}
               ></Image>
-              <div className='flex flex-col justify-center  h-full'>
-                <h1 className='md:mb-4 mono text-3xl md:text-8xl '>{rankMap(userData.cRank)}</h1>
+              <div className={` transition-all flex flex-col justify-center  h-full ${hovering ? 'opacity-0' : ''}`}>
+                <h1 className=' md:mb-4 geo text-3xl md:text-8xl '>{rankMap(userData.cRank)}</h1>
                 <Slider className='mt-4' width={{ md: '36rem' }} pl='2'>
                   <SliderTrack>
                     <SliderFilledTrack />
@@ -67,9 +87,7 @@ export default function DashBoard() {
             <Tilty reset='true' perspective='1600' max='15' className='bg-dotted mx-4 shadow-xl h-max'>
               <div
                 className='w-96 h-56 rounded-lg hover:bg-primc cursor-pointer  border-primc  transition-all border p-6'
-                onClick={() => {
-                  setTerminalOpen(true);
-                }}
+                ref={terminalOpener}
               >
                 <h2 className='robo text-3xl mb-1'>Open Terminal</h2>
                 <h3 className='robo text-base mb-4'>Navigate pages with your keyboard</h3>
@@ -87,7 +105,7 @@ export default function DashBoard() {
           </div>
         </div>
       </div>
-      {!terminalOpen ? <Tooly text={'View Rank System'} refo={rankCard}></Tooly> : ''}
+      {/* {!terminalOpen ? <Tooly text={'View Rank System'} refo={rankCard}></Tooly> : ''} */}
     </NicePage>
   );
 }

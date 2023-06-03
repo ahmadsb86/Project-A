@@ -18,23 +18,15 @@ import { FaGithub } from 'react-icons/fa';
 import { getAuth, getUser, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useState, useEffect } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { getFirestore, collection, doc, setDoc, getDoc, query, where } from 'firebase/firestore';
 
-import firebase from '../firebaseConfig'; //needed
+import { useUser, getStorage, setStorage, existsStorage } from '../customStuff/useDB';
+import { useRouter } from 'next/router';
 
 export default function SignUpCard(props) {
   //Init
+  const router = useRouter();
   const toast = useToast();
   const auth = getAuth();
-  const db = getFirestore(firebase);
-
-  //Connect to DB
-  // const [users, userLoading, dbError] = useCollection(collection(db, 'Users'));
-  // if (dbError)
-  //   errorToast(
-  //     'Connection to Database failed',
-  //     `If you contact support, please include the error code: ${dbError.message}`
-  //   );
 
   const loginOldUser = async () => {
     console.log('Welcome back, ');
@@ -42,17 +34,32 @@ export default function SignUpCard(props) {
 
   const onboardNewUser = async (user) => {
     console.log('Welcome to Project A, ' + user.displayName + '!');
-    await setDoc(
-      doc(db, 'Users', user.uid),
+
+    await setStorage(
+      'Users',
+      user.uid,
       {
         name: user.displayName,
         email: user.email,
         handle: `Please-change-your-handle-${user.email}`,
         pRank: `unranked`,
+        cRank: `unranked`,
       },
-      { merge: true }
+      false
     );
-    window.open('/onboarding', '_blank');
+
+    // await setDoc(
+    //   doc(db, 'Users', user.uid),
+    //   {
+    //     name: user.displayName,
+    //     email: user.email,
+    //     handle: `Please-change-your-handle-${user.email}`,
+    //     pRank: `unranked`,
+    //   },
+    //   { merge: true }
+    // );
+
+    router.push('/onboarding');
   };
 
   const postSignin = async (credCallback) => {
@@ -61,29 +68,11 @@ export default function SignUpCard(props) {
       const token = credential.accessToken;
       const user = result.user;
 
-      //check if user exists in database with same email
-      // var newUser = true;
-      // if (users) {
-      //   users.docs.map((doc) => {
-      //     if (doc.data().email === user.email) {
-      //       newUser = false;
-      //     }
-      //   });
-      // }
+      const UserExists = await existsStorage('User', user.uid);
 
-      const userRef = doc(db, 'Users', user.uid);
+      console.log('User Exists returned ', UserExists);
 
-      var newUser;
-      try {
-        const userDoc = await getDoc(userRef);
-        newUser = !userDoc.exists();
-      } catch (error) {
-        console.error('Error checking if new user:', error);
-        newUser = false; // Assume not a new user on error
-      }
-
-      //call appropriate function based on user type
-      if (newUser) await onboardNewUser(user);
+      if (!UserExists) await onboardNewUser(user);
       else await loginOldUser();
     };
   };
@@ -170,10 +159,10 @@ export default function SignUpCard(props) {
             Sign in with an account by choosing an authentication provider
           </Heading>
         </CardHeader>
-        <Button mx='5' className='robo' leftIcon={<FcGoogle />} onClick={signIn('Google')}>
+        <Button mx='5' className='robo bg-neutral-700' leftIcon={<FcGoogle />} onClick={signIn('Google')}>
           Continue with Google
         </Button>
-        <Button className='robo' my='4' mx='5' leftIcon={<FaGithub />} onClick={signIn('Github')}>
+        <Button className='robo bg-neutral-700' my='4' mx='5' leftIcon={<FaGithub />} onClick={signIn('Github')}>
           Continue with Github
         </Button>
       </Card>

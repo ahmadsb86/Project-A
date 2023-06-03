@@ -15,7 +15,8 @@ const rankMap = (inp)=>{
         'platinum1': 'Platinum 1',
         'platinum2': 'Platinum 2',
         'platinum3': 'Platinum 3',
-
+        'loading': 'Loading ...',
+        'unranked': 'Unranked'
     }
 
     return map[inp]
