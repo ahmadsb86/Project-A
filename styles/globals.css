@@ -1,5 +1,5 @@
 
-  @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@200;400&family=Josefin+Sans:ital,wght@1,300&family=Montserrat&family=Poppins&family=Roboto+Slab:wght@300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@200;400&family=Josefin+Sans&family=Montserrat&family=Poppins&family=Roboto+Slab:wght@300&display=swap');
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -34,9 +34,8 @@
 }
 
 
-
+.jose{font-family: 'Josefin Sans';}
 .slab{    font-family: 'Roboto Slab', serif;}
-.geo{    font-family: 'Geologica', monospace;}
 .mont{    font-family: 'Montserrat', monospace;}
 .robo{font-family: 'Matter', 'Roboto', 'Courier New', Courier, monospace;}
 .mono{font-family: 'Space Mono', monospace}
@@ -47,6 +46,10 @@
   @apply bg-back h-full;
 }
 
+
+#contentWrapper>p{
+  background-color: aqua;
+}
 
 .top-h{
   top: 80vh;

@@ -3,7 +3,16 @@ import { ChakraProvider, ModalContextProvider } from '@chakra-ui/react';
 import { ThemeProvider } from '@mui/material';
 import { generatePalette } from 'palette-by-numbers';
 import { extendTheme } from '@chakra-ui/react';
-import { muiTheme } from '../customStuff/muiTheme';
+import { createTheme } from '@mui/material/styles';
+
+const muiTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#41808B',
+    },
+    mode: 'dark',
+  },
+});
 
 const theme = extendTheme({
   config: {
@@ -50,11 +59,11 @@ const theme = extendTheme({
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider theme={muiTheme}>
-      <ChakraProvider cssVarsRoot=':root' theme={theme}>
+    <ChakraProvider cssVarsRoot=':root' theme={theme}>
+      <ThemeProvider theme={muiTheme}>
         <Component {...pageProps} />
-      </ChakraProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </ChakraProvider>
   );
 }
 

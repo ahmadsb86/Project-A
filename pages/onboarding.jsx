@@ -37,8 +37,8 @@ export default function onboarding() {
   /* -------------------------------------------------------------------------- */
 
   const [text, helper] = useTypewriter({
-    words: ['Looks like you are new here ...', 'Welcome to Project A ...', 'Lets get started'],
-    // words: ['L'],
+    // words: ['Looks like you are new here ...', 'Welcome to Project A ...', 'Lets get started'],
+    words: ['L'],
     loop: 1,
     typeSpeed: 10,
     deleteSpeed: 5,

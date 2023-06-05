@@ -17,7 +17,8 @@ import Pagination from '@mui/material/Pagination';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getStorage, setStorage, useUser } from '../customStuff/useDB';
+import { useUser } from '../customStuff/useDB';
+import { getQuestion } from '../customStuff/usePset';
 import CircleBtn from '../components/circleBtn';
 
 export default function viewQ() {
@@ -52,7 +53,7 @@ export default function viewQ() {
   useEffect(() => {
     const run = async () => {
       if (problem_id != undefined) {
-        const res = await getStorage('Problems', problem_id);
+        const res = getQuestion(problem_id);
         setTitle(res.title);
         setStatement(res.statement.replaceAll('\\n', '\n\n'));
         setCredits(res.credits);

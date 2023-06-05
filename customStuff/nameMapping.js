@@ -22,4 +22,6 @@ const rankMap = (inp)=>{
     return map[inp]
 }
 
-export {rankMap};
+const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum']
+
+export {rankMap, ranks};
